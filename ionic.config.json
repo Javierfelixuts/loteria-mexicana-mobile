@@ -1,0 +1,7 @@
+{
+  "name": "loteria-mexicana",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
