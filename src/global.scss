@@ -35,3 +35,72 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+:root {
+    --ion-color-primary: #e42257;
+    --ion-color-secondary: #157b7f;
+    --ion-color-tertiary: #ac8553;
+    --ion-color-success: #005a3e;
+    --ion-color-warning: #ffc409;
+    --ion-color-danger: #eb445a;
+    --ion-color-dark: #639166;
+    --ion-color-medium: #935ae3;
+    --ion-color-light: #f4f5f8;
+    --ion-color-primary-shade: #4e7b51;
+
+}
+
+ion-content {
+  --padding-top: env(safe-area-inset-top);
+  --padding-bottom: env(safe-area-inset-bottom);
+  --background: transparent;
+}
+
+
+
+@media (prefers-color-scheme: light) {
+  .counter-cards {
+    color: #fff;
+  }
+  ion-fab-button ion-icon {
+    color: #fff;
+  }
+  ion-app{
+    background: url("/assets/background.png") no-repeat;
+        background-position: bottom;
+        background-size: cover;
+
+  }
+  ion-app {
+    background-color: #607D8B;
+    color: white;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root{
+    --ion-color-primary: #6c147e;
+    --ion-color-secondary: #152d6a;
+  }
+
+  .counter-cards {
+    color: #fdc029;
+    text-shadow: 0px 1px 5px #fdba29;
+  }
+  ion-fab-button ion-icon {
+    color: #fff;
+  }
+  app-home{
+    background: url("/assets/background-dark.png") no-repeat;
+        background-position: center;
+        background-size: cover;
+
+  }
+  ion-app {
+    background-color: #607D8B;
+    color: white;
+  }
+
+  .btn-barajear {
+    color: #fff;
+  }
+}

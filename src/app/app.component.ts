@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
+import {
+  AlertController,
+  IonApp,
+  IonRouterOutlet,
+} from '@ionic/angular/standalone';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +14,9 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(
+    private platform: Platform,
+    private router: Router,
+    private alertController: AlertController
+  ) {}
 }

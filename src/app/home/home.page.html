@@ -1,20 +1,117 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <div class="ad-banner"></div>
+    <img src="../../assets/svg/reginas.svg" alt="">
+    <h3 class="counter-cards">{{ currentCardId }} / 54</h3>
+    <!-- app -->
+    <div class="deck" #playPauseRef>
+      <div class="play-pause curtain" [class.paused]="!isPlaying() && hasStarted()"
+      (click)="togglePlayPause()">
+        <h3 class="pause appearText">PAUSADO</h3>
+        <h3 class="iniciar" [class.hiddenText]="hasStarted() || isShuffling()">INICIAR</h3>
+      </div>
+      @for (c of deck; track c; let i = $index; ) {
+      <div
+        class="card"
+        #cardRefs
+        [id]="'card-' + c.id"
+        [class.placed]="c.placed"
+        [style.zIndex]="c.placed ? 100 - placedOrder.indexOf(c.id) : 1000 + i"
+        [style.top.px]="c.placed ? placedTop : 0"
+      >
+        <div class="card-inner">
+          <div class="card-front">
+            <img
+              class="card reveal-card fit-content absolute rounded-sm open"
+              width="200"
+              height="292"
+              [src]="c?.src_optimized"
+              alt=""
+            />
+          </div>
+          <div class="card-back" *ngIf="!c.placed"></div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- placed cards -->
+    <div class="placed-scroll">
+      <div class="placed-container" #placedContainer></div>
+    </div>
   </div>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <!-- Reset Game -->
+   <div class="flex space-bewteen mb10" style="width: 100%">
+     <ion-button color="secondary" class="mx-auto"  [disabled]="isShuffling() || hasStarted()"
+      class="barajear-btn "
+      color="secondary"
+      (click)="shuffleDeck()"> <span class="text-barajear">Barajear</span></ion-button>
+    </div>
+  <div class="flex space-bewteen mb5" style="width: 100%">
+    <ion-fab-button
+      color="secondary"
+      id="present-alert"
+      class="button-game play-btn reload-btn align-self-end"
+    >
+      <div></div>
+      <ion-icon name="reload-outline"></ion-icon>
+    </ion-fab-button>
+
+    <!-- Iniciar -->
+
+    <ion-fab-button
+      *ngIf="!hasStarted() && !isPlaying()"
+      [disabled]="isShuffling()"
+      color="primary"
+      class="button-game play-btn"
+      (click)="playGame()"
+    >
+      <div></div>
+      <ion-icon name="play"></ion-icon>
+    </ion-fab-button>
+
+    <!-- Pausar -->
+    <ion-fab-button
+      *ngIf="hasStarted() && isPlaying()"
+      color="primary"
+      class="button-game play-btn"
+      (click)="pauseAnim()"
+    >
+      <div></div>
+      <ion-icon name="pause"></ion-icon>
+    </ion-fab-button>
+
+    <!-- Reanudar -->
+    <ion-fab-button
+      *ngIf="hasStarted() && !isPlaying()"
+      color="primary"
+      class="button-game play-btn"
+      (click)="resumeAnim()"
+    >
+      <div></div>
+      <ion-icon name="play"></ion-icon>
+    </ion-fab-button>
+    <!-- Volumen button -->
+    <ion-fab-button
+      color="secondary"
+      class="button-game volume-btn align-self-end"
+      (click)="handleVolume(volumeSize)"
+    >
+      <div></div>
+      <ion-icon
+        [name]="volumeSize ? 'volume-high-outline' : 'volume-mute-outline'"
+      ></ion-icon>
+    </ion-fab-button>
+
+  </div>
+
+  <ion-alert
+    trigger="present-alert"
+    header="¿VOLVER A EMPEZAR?"
+    [buttons]="alertButtons"
+  />
+</ion-footer>

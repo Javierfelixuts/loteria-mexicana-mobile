@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'loteria-mexicana',
+  appId: 'com.javierfelix.loteriamexicana',
+  appName: 'loteria mexicana',
   webDir: 'www'
 };
 
