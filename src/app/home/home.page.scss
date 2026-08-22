@@ -11,6 +11,7 @@
 /* footer */
 ion-footer {
   padding-bottom: env(safe-area-inset-bottom) !important;
+  z-index: -1;
 }
 /* ion-fab {
   margin-top: var(--ion-safe-area-top, 0);
@@ -327,8 +328,15 @@ main {
     .counter-cards {
       color: #581c6f;
     }
+    ion-menu-button {
+    color: #e42257;
+  }
 }
 @media (prefers-color-scheme: dark) {
+  ion-menu-button {
+    color: #fff;
+  }
+
   .button-game div {
     background-color: #a324a9;
   }

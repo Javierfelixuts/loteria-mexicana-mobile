@@ -1,5 +1,47 @@
 <ion-content [fullscreen]="true">
+<ion-menu #menu contentId="container" side="end" >
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Configuración</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-list>
+    <ion-item-group>
+     <!--  <ion-item>
+        <ion-label>Sonido</ion-label>
+        <ion-item>
+          <ion-toggle [checked]="allowSound" (ionChange)="changeAllowSound()"></ion-toggle><br /><br />
+        </ion-item>
+      </ion-item> -->
+      <ion-item>
+        <ion-label>Tiempo entre carta</ion-label>
+        <ion-list>
+          <ion-select
+          (ionChange)="handleChangeVelocity($event)"
+          [value]="velocityCurrentBetweenCards">
+            <ion-select-option *ngFor="let value of validNumbersBetweenCards" [value]="value">{{value}} {{value == 1 ? 'segundo' : 'segundos'}}</ion-select-option>
+          </ion-select>
+        </ion-list>
 
+      </ion-item>
+      <!-- <ion-item lines="none">
+        <ion-label>Ritmo de lectura</ion-label>
+        <ion-list>
+
+          <ion-select
+            (ionChange)="handleChangeVelocityReadCard($event)"
+            [value]="velocityCurrentReadCard">
+              <ion-select-option *ngFor="let value of validNumbersReadCard" [value]="value">{{value}} {{value == 1 ? 'segundo' : 'segundos'}}</ion-select-option>
+          </ion-select>
+        </ion-list>
+      </ion-item> -->
+    </ion-item-group>
+
+
+    </ion-list>
+  </ion-content>
+</ion-menu>
   <div id="container">
     <div class="ad-banner"></div>
     <img src="../../assets/svg/reginas.svg" alt="">
@@ -26,7 +68,7 @@
               class="card reveal-card fit-content absolute rounded-sm open"
               width="200"
               height="292"
-              [src]="c?.src_optimized"
+              [src]="c?.src_versioned"
               alt=""
             />
           </div>
@@ -41,9 +83,18 @@
       <div class="placed-container" #placedContainer></div>
     </div>
   </div>
+
+  <ion-fab vertical="center" horizontal="start" slot="fixed">
+    <ion-fab-button>
+      <ion-menu-button (click)="menuOpen()">
+        <ion-icon name="settings"/>
+      </ion-menu-button>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>
 
-<ion-footer class="ion-no-border">
+<ion-footer class="ion-no-border" [style.z-index]="zIndexFooter()">
   <!-- Reset Game -->
    <div class="flex space-bewteen mb10" style="width: 100%">
      <ion-button color="secondary" class="mx-auto"  [disabled]="isShuffling() || hasStarted()"
@@ -76,9 +127,10 @@
 
     <!-- Pausar -->
     <ion-fab-button
-      *ngIf="hasStarted() && isPlaying()"
+      *ngIf="(hasStarted() && isPlaying())"
       color="primary"
       class="button-game play-btn"
+
       (click)="pauseAnim()"
     >
       <div></div>
@@ -87,10 +139,11 @@
 
     <!-- Reanudar -->
     <ion-fab-button
-      *ngIf="hasStarted() && !isPlaying()"
+      *ngIf="(hasStarted() && !isPlaying()) "
       color="primary"
       class="button-game play-btn"
       (click)="resumeAnim()"
+      [disabled]="currentCardId >= totalCards"
     >
       <div></div>
       <ion-icon name="play"></ion-icon>

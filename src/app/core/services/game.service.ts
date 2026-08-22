@@ -35,7 +35,7 @@ export class GameService {
   console.log('FIN DE PARTIDA');
   console.log('Cartas:', this.cardsDrawn);
 
-  if (this.cardsDrawn >= 30) {
+  if (this.cardsDrawn >= 20) {
 
     this.validGames++;
 
@@ -44,7 +44,7 @@ export class GameService {
       this.validGames
     );
 
-    if (this.validGames >= 4) {
+    if (this.validGames >= 3) {
 
       console.log('LANZAR ANUNCIO');
 

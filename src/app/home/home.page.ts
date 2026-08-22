@@ -5,7 +5,7 @@ import {
   IonFooter,
   IonIcon,
   IonButton,
-} from '@ionic/angular/standalone';
+  IonMenu, IonHeader, IonToolbar, IonTitle, IonMenuButton, IonFab, IonItem, IonLabel, IonList, IonItemGroup, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import {
   Component,
   ElementRef,
@@ -29,6 +29,7 @@ import {
   volumeHighOutline,
   play,
   pause,
+  settings
 } from 'ionicons/icons';
 import Flip from 'gsap/Flip';
 import { BackButtonService } from '../core/services/back-button.service';
@@ -39,7 +40,7 @@ import { GameService } from '../core/services/game.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonItemGroup, IonList, IonLabel, IonItem, IonFab, IonTitle, IonToolbar, IonHeader,
     IonButton,
     CommonModule,
     IonAlert,
@@ -47,6 +48,10 @@ import { GameService } from '../core/services/game.service';
     IonFooter,
     IonIcon,
     IonContent,
+    IonMenu,
+    IonMenuButton,
+    IonSelect,
+    IonSelectOption
   ],
 })
 export class HomePage {
@@ -56,6 +61,7 @@ export class HomePage {
   placedContainer!: ElementRef<HTMLElement>;
   @ViewChild('playPauseRef', { static: true })
   playPauseRef!: ElementRef<HTMLElement>;
+  @ViewChild('menu') menu!: IonMenu;
 
   deck: ICard[] = cardsStorage;
   allCards: ICard[] = cardsStorage;
@@ -82,6 +88,11 @@ export class HomePage {
   volumeSize = 1;
   totalCards = this.allCards.length;
   amount = 9;
+  zIndexFooter = signal(1);
+
+  //VOLUME
+  velocityCurrentBetweenCards = 2;
+  validNumbersBetweenCards =  [1,1.5,2,2.5,3,4,5];
 
   public alertButtons = [
     {
@@ -118,6 +129,7 @@ export class HomePage {
       shuffleOutline,
       play,
       pause,
+      settings,
     });
     // Check initial orientation
   }
@@ -187,17 +199,11 @@ export class HomePage {
     // Primera carta visible primero
     tl.to(cards[0], {
       y: 80,
-
       x: -40,
-
       rotation: -25,
-
       scale: 0.65,
-
       duration: 0.18,
-
       ease: 'power2.out',
-
       zIndex: 3000,
     });
 
@@ -206,13 +212,9 @@ export class HomePage {
       cards.slice(1),
       {
         y: 70,
-
         scale: 0.65,
-
         duration: 0.16,
-
         stagger: 0.02,
-
         ease: 'power2.out',
       },
       '-=.08'
@@ -226,15 +228,10 @@ export class HomePage {
         card,
         {
           x: left ? -100 : 100,
-
           y: 120 + index * 5,
-
           rotation: left ? -35 : 35,
-
           duration: 0.18,
-
           ease: 'power3.out',
-
           zIndex: index,
         },
         '-=.12'
@@ -247,17 +244,11 @@ export class HomePage {
         card,
         {
           x: index % 2 === 0 ? 120 : -120,
-
           y: -40 + index * 15,
-
           rotation: index % 2 === 0 ? 45 : -45,
-
           scale: 0.55,
-
           zIndex: 3000 + index,
-
           duration: 0.25,
-
           ease: 'power2.inOut',
         },
         '-=.18'
@@ -270,13 +261,9 @@ export class HomePage {
         card,
         {
           x: gsap.utils.random(-20, 20),
-
           y: gsap.utils.random(0, 10),
-
           rotation: gsap.utils.random(-5, 5),
-
           duration: 0.12,
-
           ease: 'power2.out',
         },
         '-=.08'
@@ -286,17 +273,11 @@ export class HomePage {
     // Regresar al mazo
     tl.to(cards, {
       x: 0,
-
       y: 0,
-
       rotation: 0,
-
       scale: 1,
-
       duration: 0.35,
-
       ease: 'back.out(1.5)',
-
       stagger: 0.02,
     });
 
@@ -438,9 +419,11 @@ export class HomePage {
     const card = cards[cards.length - 1 - this.currentCardId]; // carta "top"
     this.currentCard = card;
     this.currentCardId++;
-
+    if(this.currentCardId > this.totalCards - 1) this.isPlaying.set(false);
     if (this.currentCardId > this.totalCards) {
+
       this.currentCardId = this.totalCards;
+
       return;
     }
     const el = this.getCardElement(card.id);
@@ -483,7 +466,7 @@ export class HomePage {
     this.currentAudio = null;
     this.currentTimeline.to(inner, {
       rotateY: 180,
-      duration: 1,
+      duration: this.velocityCurrentBetweenCards,
       ease: 'power2.inOut',
       onComplete: async () => {
         this.currentAudio = await this.playAudio(card.voice);
@@ -584,5 +567,32 @@ export class HomePage {
   async playAudio(audioPath: string): Promise<HTMLAudioElement> {
     const audio = new Audio(audioPath);
     return audio;
+  }
+
+
+  /* handle volume */
+  handleChangeVelocity(event: CustomEvent) {
+    const value = event.detail.value;
+    this.velocityCurrentBetweenCards = value;
+    console.log('Selected velocity:', value);
+  }
+
+  handleChangeVelocityReadCard(event: CustomEvent) {
+    const value = event.detail.value;
+    //this.gameService.setVelocityReadCard(value);
+    console.log('Selected velocity read card:', value);
+  }
+
+//pendeidnte arregalar lo de la velocidad del audio y el zIndex del footer
+//Zindex del footer listo
+  async menuOpen(){
+    if(this.zIndexFooter() === 1){
+      this.zIndexFooter.set(-1);
+    }
+
+    this.menu.ionDidClose.subscribe(() => {
+      this.zIndexFooter.set(1);
+    });
+
   }
 }
